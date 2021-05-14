@@ -37,7 +37,6 @@ class Game : public graphics::AnimationEventListener,
     opponent_.push_back(std::move(op2));
     opponent_.push_back(std::move(op3));
     opponent_.push_back(std::move(op4));
-
   }
 
   void Init() {
