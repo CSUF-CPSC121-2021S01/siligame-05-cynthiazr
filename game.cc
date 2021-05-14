@@ -1,22 +1,14 @@
 #include "game.h"
-#include <iostream>
-#include <vector>
 #include "cpputils/graphics/image.h"
 #include "opponent.h"
 #include "player.h"
 
 void Game::UpdateScreen() {
   gamescreen_.DrawRectangle(0, 0, 800, 600, 255, 255, 255);
-  graphics::Color black(255, 255, 255);
+  graphics::Color black(0, 0, 0);
+  graphics::Color red(150, 6, 6);
   gamescreen_.DrawText(0, 0, "Score: " + std::to_string(GetScore()), 21, black);
 
-  if(HasLost() == true) {
-    gamescreen_.DrawText(gamescreen_.GetWidth()* (0.5), gamescreen_.GetHeight() * (0.5), "GAME OVER", 71, black);
-  }
-/*  * Draws the string |text| with position (x,y) at the top left corner,
-   * with |font_size| in pixels, colored by |color|. Returns false if the
-   * params are out of bounds.
-   */
   for (int i = 0; i < opponent_.size(); i++) {
     if (opponent_[i]->GetIsActive() == true) {
       opponent_[i]->Draw(gamescreen_);
@@ -38,6 +30,11 @@ void Game::UpdateScreen() {
   if (player_.GetIsActive() == true) {
     player_.Draw(gamescreen_);
   }
+
+  if (HasLost() == true) {
+    gamescreen_.DrawText(gamescreen_.GetWidth() * (0.25),
+                         gamescreen_.GetHeight() * (0.5), "GAME OVER", 65, red);
+  }
 }
 
 void Game::MoveGameElements() {
@@ -58,8 +55,6 @@ void Game::MoveGameElements() {
       playerprojectile_[i]->Move(gamescreen_);
     }
   }
-
-
 }
 
 void Game::FilterIntersections() {
@@ -87,12 +82,12 @@ void Game::FilterIntersections() {
   for (int i = 0; i < playerprojectile_.size(); i++) {
     for (int j = 0; j < opponent_.size(); j++) {
       bool intersect_opponent =
-          playerprojectile_[i]->IntersectsWith(opponent_[i].get());
+          playerprojectile_[i]->IntersectsWith(opponent_[j].get());
       if (intersect_opponent == true) {
         playerprojectile_[i]->SetIsActive(false);
         opponent_[j]->SetIsActive(false);
         if (player_.GetIsActive() == true) {
-          score_ ++;
+          score_++;
         }
       }
     }
@@ -100,8 +95,13 @@ void Game::FilterIntersections() {
 }
 
 void Game::OnAnimationStep() {
+  if (opponent_.size() == 0) {
+    CreateOpponents();
+  }
   MoveGameElements();
+  LaunchProjectiles();
   FilterIntersections();
+  RemoveInactive();
   UpdateScreen();
   gamescreen_.Flush();
 }
@@ -116,12 +116,20 @@ void Game::OnMouseEvent(const graphics::MouseEvent &mouse_event) {
       player_.SetY(mouse_event.GetY() - player_.GetHeight() * (0.5));
     }
   }
+
+  if (mouse_event.GetMouseAction() == graphics::MouseAction::kPressed ||
+      mouse_event.GetMouseAction() == graphics::MouseAction::kDragged) {
+    std::unique_ptr<PlayerProjectile> pl_p = std::make_unique<PlayerProjectile>(
+        mouse_event.GetX(), mouse_event.GetY());
+    playerprojectile_.push_back(std::move(pl_p));
+  }
 }
 
 void Game::LaunchProjectiles() {
-  for(int i = 0; i < opponent_.size(); i++) {
-  std::unique_ptr<OpponentProjectile> temp_op = opponent_[i]->LaunchProjectile();
-    if(temp_op != nullptr) {
+  for (int i = 0; i < opponent_.size(); i++) {
+    std::unique_ptr<OpponentProjectile> temp_op =
+        opponent_[i]->LaunchProjectile();
+    if (temp_op != nullptr) {
       opponentprojectile_.push_back(std::move(temp_op));
     }
   }
@@ -145,5 +153,4 @@ void Game::RemoveInactive() {
       playerprojectile_.erase(playerprojectile_.begin() + i);
     }
   }
-
 }

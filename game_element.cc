@@ -24,7 +24,7 @@ bool GameElement::IntersectsWith(GameElement* my_element) {
   return false;
 }
 
-bool GameElement::IsOutOfBounds(const graphics::Image &game_screen) {
+bool GameElement::IsOutOfBounds(const graphics::Image& game_screen) {
   if (GetX() < 0 || GetX() + GetWidth() > game_screen.GetWidth() ||
       GetY() < 0 || GetY() + GetHeight() > game_screen.GetHeight()) {
     return true;

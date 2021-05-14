@@ -17,15 +17,16 @@ void Opponent::Draw(graphics::Image &game_screen) {
 }
 
 std::unique_ptr<class OpponentProjectile> Opponent::LaunchProjectile() {
-      std::unique_ptr<class OpponentProjectile> op_proj =
-            std::make_unique<class OpponentProjectile>(GetX(), GetY());
-      
-      if(counter_ < 10) {
-          counter_ ++;
-          return nullptr;
-      }
+  std::unique_ptr<class OpponentProjectile> op_proj;
 
-      return std::move(op_proj);
+  if (counter_ >= 10) {
+    counter_ = 0;
+    op_proj = std::make_unique<class OpponentProjectile>(GetX(), GetY());
+    return std::move(op_proj);
+  } else {
+    counter_++;
+    return nullptr;
+  }
 }
 
 void OpponentProjectile::Draw(graphics::Image &game_screen) {
