@@ -45,8 +45,8 @@ class OpponentProjectile : public GameElement {
 
   // move function
   void Move(const graphics::Image &image) override {
-    SetY(GetY() + 1);
-    SetX(GetX() + 1);
+    SetY(GetY() + 3);
+    SetX(GetX() + 3);
 
     if (IsOutOfBounds(image)) {
       SetIsActive(false);
