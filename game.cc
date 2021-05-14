@@ -20,7 +20,7 @@ void Game::UpdateScreen() {
       opponent_[i]->Draw(gamescreen_);
     }
   }
-  
+
   for (int i = 0; i < playerprojectile_.size(); i++) {
     if (playerprojectile_[i]->GetIsActive() == true) {
       playerprojectile_[i]->Draw(gamescreen_);
@@ -119,7 +119,8 @@ void Game::OnMouseEvent(const graphics::MouseEvent &mouse_event) {
 
   if (mouse_event.GetMouseAction() == graphics::MouseAction::kPressed ||
       mouse_event.GetMouseAction() == graphics::MouseAction::kDragged) {
-    std::unique_ptr<PlayerProjectile> pl_p = std::make_unique<PlayerProjectile>(mouse_event.GetX(), mouse_event.GetY());
+    std::unique_ptr<PlayerProjectile> pl_p = std::make_unique<PlayerProjectile>(
+        mouse_event.GetX(), mouse_event.GetY());
     playerprojectile_.push_back(std::move(pl_p));
   }
 }
