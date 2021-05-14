@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <memory>
+#include <vector>
 #include "cpputils/graphics/image.h"
 #include "cpputils/graphics/image_event.h"
 #include "opponent.h"
@@ -68,6 +68,6 @@ class Game : public graphics::AnimationEventListener,
   std::vector<std::unique_ptr<OpponentProjectile>> opponentprojectile_;
   std::vector<std::unique_ptr<PlayerProjectile>> playerprojectile_;
   Player player_;
-  int score_;
-  bool has_lost_;
+  int score_ = 0;
+  bool has_lost_ = false;
 };
