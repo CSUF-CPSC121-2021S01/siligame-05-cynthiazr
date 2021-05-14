@@ -28,16 +28,21 @@ class Game : public graphics::AnimationEventListener,
 
   // member functions
   void CreateOpponents() {
-    std::unique_ptr<Opponent> op = std::make_unique<Opponent>(151, 100);
-    std::unique_ptr<Opponent> op2 = std::make_unique<Opponent>(300, 50);
+    std::unique_ptr<Opponent> op1 = std::make_unique<Opponent>(48, 93);
+    std::unique_ptr<Opponent> op2 = std::make_unique<Opponent>(194, 93);
+    std::unique_ptr<Opponent> op3 = std::make_unique<Opponent>(347, 93);
+    std::unique_ptr<Opponent> op4 = std::make_unique<Opponent>(520, 93);
 
-    opponent_.push_back(std::move(op));
+    opponent_.push_back(std::move(op1));
     opponent_.push_back(std::move(op2));
+    opponent_.push_back(std::move(op3));
+    opponent_.push_back(std::move(op4));
+
   }
 
   void Init() {
-    player_.SetX(500);
-    player_.SetY(200);
+    player_.SetX(380);
+    player_.SetY(540);
 
     // add game to derived classes
     gamescreen_.AddMouseEventListener(*this);
